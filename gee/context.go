@@ -1,6 +1,7 @@
-package gee
+package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -49,8 +50,32 @@ func (c *Context) SetHeader(key string, value string) {
 	c.Writer.Header().Set(key, value)
 }
 
+// 方法用于返回纯文本格式的响应
 func (c *Context) String(code int, format string, values ...interface{}) {
 	c.SetHeader("Content-Type", "text/plain")
 	c.Status(code)
 	c.Writer.Write([]byte(fmt.Sprintf(format, values...)))
+}
+
+func (c *Context) JSON(code int, obj interface{}) {
+	c.SetHeader("Content-Type", "application/json")
+	c.Status(code)
+	encoder := json.NewEncoder(c.Writer)
+	if err := encoder.Encode(obj); err != nil {
+		http.Error(c.Writer, err.Error(), 500)
+	}
+}
+
+// Data 方法用于返回原始字节数据格式的响应。它设置状态码，并将传入的字节数据写入到响应中
+func (c *Context) Data(code int, data []byte) {
+	c.Status(code)
+	c.Writer.Write(data)
+}
+
+// HTML 方法用于返回 HTML 格式的响应。它设置响应的 Content-Type 为 text/html，
+// 设置状态码，并将传入的 HTML 字符串转换为字节写入到响应中
+func (c *Context) HTML(code int, html string) {
+	c.SetHeader("Content-Type", "text/html")
+	c.Status(code)
+	c.Writer.Write([]byte(html))
 }
