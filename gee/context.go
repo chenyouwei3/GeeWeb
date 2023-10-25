@@ -1,4 +1,4 @@
-package main
+package gee
 
 import (
 	"encoding/json"

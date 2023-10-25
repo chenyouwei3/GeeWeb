@@ -1,4 +1,4 @@
-package main
+package gee
 
 import (
 	"net/http"
@@ -26,7 +26,7 @@ func (engine *Engine) POST(path string, handler HandlerFunc) {
 	engine.addRouter("POST", path, handler)
 }
 
-func (engine *Engine) DELETE(path string, handler HandlerFunc) {
+func (engine Engine) DELETE(path string, handler HandlerFunc) {
 	engine.addRouter("DELETE", path, handler)
 }
 
