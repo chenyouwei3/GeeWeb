@@ -7,19 +7,19 @@ import (
 
 func main() {
 	r := gee.New()
-	r.GET("/", func(c *gee.Context) {
-		c.HTML(http.StatusOK, "<h1>GEE WEB</h1>")
+	r.GET("/index", func(c *gee.Context) {
+		c.HTML(http.StatusOK, "<h1>cyw</h1>")
 	})
-
-	r.GET("/test1", func(c *gee.Context) {
-		c.String(http.StatusOK, ",%s,%s", c.Query("name"), c.Path)
-	})
-
-	r.POST("/login", func(c *gee.Context) {
-		c.JSON(http.StatusOK, gee.H{
-			"username": c.PostForm("username"),
-			"password": c.PostForm("password"),
+	c1 := r.Group("/c")
+	{
+		c1.GET("/c1", func(c *gee.Context) {
+			c.HTML(http.StatusOK, "<h1>hello</h1>")
 		})
-	})
-	r.Run(":8090")
+
+		c1.GET("/c2", func(c *gee.Context) {
+
+		})
+	}
+
+	r.Run(":9999")
 }
