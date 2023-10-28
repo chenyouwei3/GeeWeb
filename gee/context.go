@@ -17,6 +17,7 @@ type Context struct {
 	StatusCode int
 	handlers   []HandlerFunc
 	index      int
+	engine     *Engine
 }
 
 func newContext(w http.ResponseWriter, req *http.Request) *Context {
@@ -29,11 +30,19 @@ func newContext(w http.ResponseWriter, req *http.Request) *Context {
 	}
 }
 
+//func (c *Context) Next() {
+//	c.index++            // 将index加1
+//	s := len(c.handlers) // 获取handlers的长度并赋值给s
+//	for ; c.index < s; c.index++ {
+//		c.handlers[c.index](c) // 调用handlers[index]并将c作为参数传入
+//	}
+//}
+
 func (c *Context) Next() {
-	c.index++
-	s := len(c.handlers)
-	for ; c.index < s; c.index++ {
-		c.handlers[c.index](c)
+	for len(c.handlers) != 0 {
+		handlerFunc := c.handlers[0] // 获取handlers的第一个元素
+		c.handlers = c.handlers[1:]  // 移除handlers的第一个元素
+		handlerFunc(c)               // 调用handlerFunc并将c作为参数传入
 	}
 }
 
